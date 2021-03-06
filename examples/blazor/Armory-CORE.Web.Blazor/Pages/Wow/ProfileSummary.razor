@@ -1,0 +1,110 @@
+﻿@page "/wow/character/{region}/{realmSlug}/{characterName}"
+
+@inject IJSRuntime _jsRuntime
+
+@inject AppDataService _appDataService
+@inject WoWService _wowService
+
+@if (profileSummary == null)
+{
+    <div class="app-info">
+        <img class="app-info-inner" src="/images/loading.gif" width="48" alt="Loading" />
+    </div>
+}
+else
+{
+    <div id="wow-ps-container" class="wow-ps py-3 shadow" style="background-image: url(@profileSummary.RenderUrl)">
+        <div class="wow-ps-header container text-center">
+            <div class="row">
+                <div class="wow-ps-header-left col-md text-md-left">
+                    <h5>@profileSummary.Character.DisplayName</h5>
+                    <ul class="list-unstyled m-0">
+                        <li>@profileSummary.Character.Title</li>
+                        <li>@profileSummary.Character.Description</li>
+                    </ul>
+                    @if (profileSummary.Character.Guild != null)
+                    {
+                        <a href="/wow/guild/@Region/@RealmSlug/@profileSummary.Character.Guild.Id">&lt;@profileSummary.Character.Guild.Name&gt;</a>
+                    }
+                </div>
+                <div class="wow-ps-header-center col-md p-2 p-md-0">
+                    <img src="@profileSummary.Character.FactionImageUrl" width="48" />
+                </div>
+                <div class="wow-ps-header-right col-md text-md-right">
+                    <ul class="list-unstyled d-inline-flex d-md-block m-0">
+                        <li class="ml-3 ml-md-0"><span class="oi oi-globe" title="Realm"></span> @profileSummary.Character.RealmName</li>
+                        <li class="ml-3 ml-md-0"><span class="oi oi-lock-unlocked" title="Achievement Points"></span> @profileSummary.Character.AchievementPoints</li>
+                        <li class="ml-3 ml-md-0"><span class="oi oi-account-login" title="Last Login"></span> @profileSummary.Character.LastLogin</li>
+                    </ul>
+                </div>
+            </div>
+            <hr />
+        </div>
+        <div class="wow-ps-equipment container">
+            <div class="eq-top row justify-content-between">
+                <div class="eq-left col">
+                    @foreach (EquipmentSlot slot in Enum.GetValues(typeof(EquipmentSlot)).Cast<EquipmentSlot>().Where(q => q < EquipmentSlot.HANDS))
+                    {
+                        <ItemTemplate Slot="@slot" Item="@profileSummary.Character.Equipment.FirstOrDefault(q => q.Slot == slot)" />
+                    }
+                </div>
+                <div class="eq-right col">
+                    @foreach (EquipmentSlot slot in Enum.GetValues(typeof(EquipmentSlot)).Cast<EquipmentSlot>().Where(q => q >= EquipmentSlot.HANDS && q < EquipmentSlot.MAIN_HAND))
+                    {
+                        <ItemTemplate Slot="@slot" Item="@profileSummary.Character.Equipment.FirstOrDefault(q => q.Slot == slot)" />
+                    }
+                </div>
+            </div>
+            <div class="eq-bottom row justify-content-center">
+                @foreach (EquipmentSlot slot in Enum.GetValues(typeof(EquipmentSlot)).Cast<EquipmentSlot>().Where(q => q >= EquipmentSlot.MAIN_HAND))
+                {
+                    <div class="col">
+                        <ItemTemplate Slot="@slot" Item="@profileSummary.Character.Equipment.FirstOrDefault(q => q.Slot == slot)" />
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string Region { get; set; }
+
+    [Parameter]
+    public string RealmSlug { get; set; }
+
+    [Parameter]
+    public string CharacterName { get; set; }
+
+    private SummaryModel profileSummary = null;
+
+    protected override void OnInitialized()
+    {
+        Console.WriteLine("[INFO] ProfileSummary initialized");
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        Console.WriteLine($"[INFO] ProfileSummary after initialize {firstRender}");
+
+        if (firstRender)
+        {
+            _appDataService.SelectGameByType(GameType.WoW);
+
+            profileSummary = await _wowService.GetSummaryAsync(Enum.Parse<RegionEnum>(Region, true), RealmSlug, CharacterName);
+
+            StateHasChanged();
+
+            if (profileSummary != null)
+            {
+                await _jsRuntime.InvokeVoidAsync("blazorHelpers.scrollToDiv", "wow-ps-container");
+            }
+        }
+    }
+
+    public void Dispose()
+    {
+        Console.WriteLine("[INFO] ProfileSummary disposed");
+    }
+}

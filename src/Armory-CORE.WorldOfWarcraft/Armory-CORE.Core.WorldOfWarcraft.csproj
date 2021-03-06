@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>Armory_CORE.Core.WorldOfWarcraft</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Armory-CORE.Core\Armory-CORE.Core.csproj" />
+  </ItemGroup>
+
+</Project>

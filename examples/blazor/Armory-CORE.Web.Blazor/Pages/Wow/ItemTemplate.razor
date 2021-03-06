@@ -1,0 +1,52 @@
+﻿<div class="item @Slot @Item?.Quality">
+    <a role="button">
+        <div class="item-icon">
+            @if (Item != null)
+            {
+                <div class="item-image" style="background-image: url(@Item?.Icon)"></div>
+                @if (!string.IsNullOrWhiteSpace(Item.Transmog))
+                {
+                    <div class="item-transmog" style="background-image: url(images/wow/game/transmog.png)"></div>
+                }
+            }
+            else
+            {
+                <div class="item-image empty"></div>
+            }
+        </div>
+        @if (Item != null)
+        {
+            <div class="item-details">
+                <div class="item-name">@Item.Name</div>
+                <ul class="item-attachments small">
+                    <li class="item-level">@Item.Level</li>
+                    @if (Item.Enchantments != null)
+                    {
+                        foreach (var enchantment in Item.Enchantments)
+                        {
+                            <li class="item-enchantment">@enchantment.DisplayString</li>
+                        }
+                    }
+                    @if (Item.Sockets != null)
+                    {
+                        foreach (var socket in Item.Sockets)
+                        {
+                            <li class="item-socket">
+                                <div class="socket-icon" style="background-image: url(@socket.Icon)"></div>
+                                <div class="socket-frame @socket.SocketType"></div>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        }
+    </a>
+</div>
+
+@code {
+    [Parameter]
+    public EquipmentSlot Slot { get; set; }
+
+    [Parameter]
+    public EquipmentModel Item { get; set; }
+}

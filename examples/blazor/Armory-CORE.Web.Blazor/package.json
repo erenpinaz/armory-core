@@ -1,0 +1,15 @@
+{
+  "name": "armoryblazor",
+  "version": "1.0.0",
+  "description": "Sample Blazor Server Application For Blizzard API",
+  "author": "Nejdet Eren Pinaz <pinaz.eren@gmail.com>",
+  "homepage": "https://erenpinaz.com/",
+  "private": true,
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-sass": "^4.1.0"
+  },
+  "dependencies": {
+    "bootstrap": "^4.5.2"
+  }
+}

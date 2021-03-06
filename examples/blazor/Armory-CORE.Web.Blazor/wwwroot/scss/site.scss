@@ -1,0 +1,316 @@
+/* ======================================================
+    Filename    : site.scss
+    Description : Site style source
+    Author      : Nejdet Eren Pinaz
+   ====================================================== */
+
+// Import variables
+@import "./variables.scss";
+
+// Import Bootstrap
+@import "bootstrap/scss/bootstrap.scss";
+
+// Global CSS
+@import "./global.scss";
+
+// Components
+@import "./components/navbar.scss";
+@import "./components/buttons.scss";
+@import "./components/game-accordion.scss";
+
+// Sections
+@import "./sections/masthead.scss";
+@import "./sections/footer.scss";
+
+// Specific styles
+
+.app-info {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    text-align: center;
+    background-color: rgba(51, 51, 51, 0.70);
+
+    > .app-info-inner {
+        margin: auto;
+    }
+}
+
+#blazor-error-ui {
+    background: lightyellow;
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+
+    .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+    }
+}
+
+.wow-ps {
+    background-size: cover;
+    background-position: center;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.70);
+
+    .wow-ps-equipment {
+        .eq-left .item, .eq-bottom div:last-child .item {
+            text-align: left;
+
+            a, ul {
+                display: inline-flex;
+                flex-direction: row;
+            }
+
+            ul li {
+                margin-right: 0.5rem;
+            }
+
+            .item-details {
+                margin-left: 0.5rem;
+            }
+        }
+
+        .eq-right .item, .eq-bottom div:first-child .item {
+            text-align: right;
+
+            a, ul {
+                display: inline-flex;
+                flex-direction: row-reverse;
+            }
+
+            ul li {
+                margin-left: 0.5rem;
+            }
+
+            .item-details {
+                margin-right: 0.5rem;
+            }
+        }
+
+        .item {
+            a {
+                color: #fff;
+
+                &:hover {
+                    text-decoration: none;
+
+                    .item-name {
+                        color: #fff;
+                    }
+                }
+            }
+
+            .item-icon {
+                position: relative;
+                width: 56px;
+                height: 56px;
+
+                .item-image {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    bottom: 0;
+                    right: 0;
+                    background-image: url(/images/wow/game/slots.png);
+                    background-size: cover;
+                    border: 1px solid #333;
+                }
+
+                .item-transmog {
+                    position: absolute;
+                    left: 0;
+                    bottom: 0;
+                    height: 24px;
+                    width: 24px;
+                    background-image: url(/images/wow/game/transmog.png);
+                    background-size: contain;
+                }
+            }
+
+            .item-details {
+
+                @include media-breakpoint-down(md) {
+                    display: none;
+                }
+
+                .item-attachments {
+                    margin: 0;
+                    padding: 0;
+                    list-style: none;
+                    line-height: 15px;
+
+                    .item-enchantment {
+                        color: #1eff00;
+                    }
+
+                    .item-socket {
+                        position: relative;
+
+                        .socket-icon {
+                            width: 15px;
+                            height: 15px;
+                            background-size: cover;
+                        }
+
+                        .socket-frame {
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            bottom: 0;
+                            right: 0;
+                            background-image: url('/images/wow/game/sockets.png');
+
+                            &.RED, &.PUNCHCARDRED {
+                                background-position: 0 0
+                            }
+
+                            &.YELLOW, &.PUNCHCARDYELLOW {
+                                background-position: -15px 0
+                            }
+
+                            &.BLUE, &.PUNCHCARDBLUE {
+                                background-position: -30px 0
+                            }
+
+                            &.PRISMATIC {
+                                background-position: -60px 0;
+                            }
+                        }
+                    }
+                }
+            }
+
+            &.LEGENDARY {
+
+                .item-image {
+                    border-color: #ff8000 !important;
+                }
+
+                .item-name {
+                    color: #ff8000;
+                }
+            }
+
+            &.EPIC {
+                .item-image {
+                    border-color: #c600ff !important;
+                }
+
+                .item-name {
+                    color: #c600ff;
+                }
+            }
+
+            &.ARTIFACT {
+                .item-image {
+                    border-color: #e5cc80 !important;
+                }
+
+                .item-name {
+                    color: #e5cc80;
+                }
+            }
+
+            &.HEIRLOOM {
+                .item-image {
+                    border-color: #0cf !important;
+                }
+
+                .item-name {
+                    color: #0cf;
+                }
+            }
+
+            &.RARE {
+                .item-image {
+                    border-color: #0081ff !important;
+                }
+
+                .item-name {
+                    color: #0081ff;
+                }
+            }
+
+            &.UNCOMMON {
+                .item-image {
+                    border-color: #1eff00 !important;
+                }
+
+                .item-name {
+                    color: #1eff00;
+                }
+            }
+
+            &.HEAD .item-image.empty {
+                background-position: 0 0
+            }
+
+            &.NECK .item-image.empty {
+                background-position: 0 -100%
+            }
+
+            &.SHOULDER .item-image.empty {
+                background-position: 0 -200%
+            }
+
+            &.BACK .item-image.empty, &.CHEST .item-image.empty {
+                background-position: 0 -300%
+            }
+
+            &.TABARD .item-image.empty {
+                background-position: 0 -400%
+            }
+
+            &.SHIRT .item-image.empty {
+                background-position: 0 -500%;
+            }
+
+            &.WRIST .item-image.empty {
+                background-position: 0 -600%
+            }
+
+            &.HANDS .item-image.empty {
+                background-position: 0 -700%
+            }
+
+            &.WAIST .item-image.empty {
+                background-position: 0 -800%
+            }
+
+            &.LEGS .item-image.empty {
+                background-position: 0 -900%
+            }
+
+            &.FEET .item-image.empty {
+                background-position: 0 -1000%
+            }
+
+            &.FINGER_1 .item-image.empty, &.FINGER_2 .item-image.empty {
+                background-position: 0 -1100%
+            }
+
+            &.TRINKET_1 .item-image.empty, &.TRINKET_2 .item-image.empty {
+                background-position: 0 -1200%
+            }
+
+            &.MAIN_HAND .item-image.empty {
+                background-position: 0 -1300%
+            }
+
+            &.OFF_HAND .item-image.empty {
+                background-position: 0 -1400%
+            }
+        }
+    }
+}

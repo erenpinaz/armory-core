@@ -1,0 +1,101 @@
+﻿@using System.ComponentModel.DataAnnotations
+
+@inject AppDataService _appDataService
+@inject WoWService _wowService
+@inject NavigationManager _navigationManager
+
+<EditForm Model="@model" OnValidSubmit="@FetchWowProfile">
+    <DataAnnotationsValidator />
+
+    <div class="form-group">
+        <label>Region</label>
+        <InputSelect id="region" class="custom-select" ValueExpression="@(() => model.Region)" Value="@model.Region" ValueChanged="@((RegionEnum value) => RegionChangedAsync(value))">
+            <option value="@RegionEnum.EU">@RegionEnum.EU</option>
+            <option value="@RegionEnum.US">@RegionEnum.US</option>
+            <option value="@RegionEnum.KR">@RegionEnum.KR</option>
+            <option value="@RegionEnum.TW">@RegionEnum.TW</option>
+        </InputSelect>
+    </div>
+
+    <div class="form-group">
+        <label>Realm</label>
+        <InputSelect id="realm" class="custom-select" disabled="@isBusy" @bind-Value="model.RealmSlug">
+            @if (realms != null)
+            {
+                <option value="">Select a Realm</option>
+                foreach (var realm in realms)
+                {
+                    <option value="@realm.Slug">@realm.Name</option>
+                }
+            }
+        </InputSelect>
+        <ValidationMessage For="() => model.RealmSlug" />
+    </div>
+
+    <div class="form-group">
+        <label>Character Name</label>
+        <InputText id="characterName" class="form-control" disabled="@isBusy" @bind-Value="model.CharacterName" />
+        <ValidationMessage For="() => model.CharacterName" />
+    </div>
+
+    <button type="submit" class="btn btn-primary" disabled="@isBusy">Fetch Profile</button>
+</EditForm>
+
+@code {
+    [CascadingParameter]
+    RouteData RouteData { get; set; }
+
+    public class FetchProfileViewModel
+    {
+        [Required]
+        public RegionEnum Region { get; set; }
+
+        [Required]
+        public string RealmSlug { get; set; }
+
+        [Required]
+        public string CharacterName { get; set; }
+    }
+    private FetchProfileViewModel model = new FetchProfileViewModel { };
+
+    private IEnumerable<Realm> realms { get; set; }
+    private bool isBusy { get; set; } = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            model.Region = RouteData.RouteValues.ContainsKey("region") ? Enum.Parse<RegionEnum>((string)RouteData.RouteValues["region"], true) : RegionEnum.EU;
+
+            await GetRealmsAsync(model.Region);
+
+            model.RealmSlug = RouteData.RouteValues.ContainsKey("realmSlug") ? (string)RouteData.RouteValues["realmSlug"] : string.Empty;
+            model.CharacterName = RouteData.RouteValues.ContainsKey("characterName") ? (string)RouteData.RouteValues["characterName"] : string.Empty;
+
+            StateHasChanged();
+        }
+    }
+
+    private async Task RegionChangedAsync(RegionEnum region)
+    {
+        model.Region = region;
+        await GetRealmsAsync(region);
+    }
+
+    private async Task GetRealmsAsync(RegionEnum region)
+    {
+        isBusy = true;
+
+        realms = await _wowService.GetRealmsAsync(region);
+        model.RealmSlug = realms.FirstOrDefault()?.Slug;
+
+        isBusy = false;
+
+        StateHasChanged();
+    }
+
+    private void FetchWowProfile()
+    {
+        _navigationManager.NavigateTo($"/wow/character/{model.Region}/{model.RealmSlug}/{model.CharacterName}", true);
+    }
+}
