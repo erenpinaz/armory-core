@@ -1,6 +1,6 @@
 ﻿// gulpfile.js
 var gulp = require("gulp"),
-    sass = require("gulp-sass");
+    sass = require("gulp-sass")(require('sass'));
 
 var paths = {
     src: {

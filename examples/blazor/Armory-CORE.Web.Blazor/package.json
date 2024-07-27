@@ -6,8 +6,10 @@
   "homepage": "https://erenpinaz.com/",
   "private": true,
   "devDependencies": {
-    "gulp": "^4.0.2",
-    "gulp-sass": "^5.1.0"
+    "check-dependencies": "^2.0.0",
+    "gulp": "^5.0.0",
+    "gulp-sass": "^5.1.0",
+    "sass": "^1.77.8"
   },
   "dependencies": {
     "bootstrap": "^4.5.2"
